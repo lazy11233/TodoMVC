@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <title>todoMVC</title>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1 class="todo-title">todos</h1>
+            <input type="text" class="new-todo" placeholder="What needs to be done?"
+            v-model="newTodo" @keyup.enter="addTodo" >
+        </header>
+
+        <main class="main" v-cloak v-show="todos.length">
+            <input type="checkbox" v-model="allDone" class="toggle-all" >
+            <ul class="todo-list">
+                <li v-for="todo in filteredTodos" class="todo" :key="todo.id" :class="{completed: todo.completed,editing: (todo === editedTodo)}">
+                    <div class="view">
+                        <input type="checkbox" v-model="todo.completed" class="toggle">
+                        <label @dblclick="editTodo(todo)">{{todo.title}}</label>
+                        <button @click="removeTodo(todo)" class="destroy">x</button>
+                    </div>
+                    <input type="text" class="edit" v-model="todo.title"
+                    @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)"
+                    @keyup.esc="cancleEdit(todo)" v-todo-focus="todo === editedTodo">
+                </li>
+            </ul>
+        </main>
+
+        <footer class="footer" v-show="todos.length">
+            <span class="todo-count">
+                <strong>{{remaining}}</strong>
+                {{remaining | pluralize}}
+            </span>
+            <ul class="filters">
+                <li><a href="#/all" :class="{selected:visibility === 'all'}">All</a></li>
+                <li><a href="#/active" :class="{selected:visibility === 'active'}">Active</a></li>
+                <li><a href="#/completed" :class="{selected:visibility === 'completed'}">Completed</a></li>
+                <button @click="removeCompleted"> Clear completed </button>
+            </ul>
+        </footer>
+    </div>
+    <script src="./js/vue.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+</html>
